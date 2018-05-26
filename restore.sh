@@ -1,17 +1,15 @@
 #!/bin/bash
 
-itens=("dc" "svc" "bc" "routes" "ds" "rolebinding" "secrets" "imagestream" "users" "identity")
-touch dump/restore.txt
-rm dump/*.yaml
-object=$(ls dump) && echo -e "${object}" >> dump/restore.txt
+itens=("dc" "svc" "bc" "routes" "ds" "rolebinding" "secrets" "imagestream" "sa" "configmap")
+touch restore.txt
+rm *.yaml
+object=$(ls) && echo -e "${object}" >> restore.txt
 
 for i in "${itens[@]}"
 do
   while read line; do  
-    oc new-project "${line}"
-    oc create -f dump/"${line}"
-    oc new-app ${i}-"${line}" -n "${line}"
-  done < dump/restore.txt
+    curl -Lv -H "Authorization: Bearer $token" https://${url}/api/v1/project/ --data "{\"name\":\""${line}"\",\"family\":\"default\"}" -H content-type:application/json
+    oc create -f "${line}"
+    oc process  ${i}-"${line}" | oc create -f - -n"${line}" 
+  done < restore.txt
 done
-
-

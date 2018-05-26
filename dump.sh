@@ -1,6 +1,6 @@
 #!/bin/bash
 
-itens=( "dc" "svc" "bc" "routes" "ds" "rolebinding" "secrets" "imagestream" "users" "identity" )
+itens=( "dc" "svc" "bc" "routes" "ds" "rolebinding" "secrets" "imagestream" "users" "identity" "sa" "configmap" )
 mkdir dump && touch dump/env.txt
   
 for i in "${itens[@]}"
@@ -17,4 +17,5 @@ do
   done < dump/env.txt
 done
 
-rm dump/*.yaml
+
+
